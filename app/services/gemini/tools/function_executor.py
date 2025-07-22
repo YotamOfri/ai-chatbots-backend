@@ -8,7 +8,7 @@ async def execute_function_call(function_call: types.FunctionCall, request: Requ
     fn_name = function_call.name
     parameters = function_call.args or {}
     fetcher = function_definitions.get(fn_name, {}).get("fetcher")
-
+    fn_type = function_definitions.get(fn_name, {}).get("type") or "function"
     if not fetcher:
         return types.Part.from_function_response(
             name=fn_name,
@@ -23,7 +23,7 @@ async def execute_function_call(function_call: types.FunctionCall, request: Requ
             data = await loop.run_in_executor(
                 None, lambda: fetcher(**parameters, request=request)
             )
-        print(data, "data")
+
         return types.Part.from_function_response(
             name=fn_name,
             response={"result": data},

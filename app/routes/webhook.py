@@ -26,6 +26,7 @@ async def receive_message(request: Request):
         # Twilio sends data as application/x-www-form-urlencoded
         form = await request.form()
         print("📫 WhatsApp Message Received", form)
+        request.state.form = form
         # Extract useful fields
         from_number = form.get("From")
         body = form.get("Body")
@@ -35,11 +36,11 @@ async def receive_message(request: Request):
         print(f"Message: {body}")
 
         # Pass the form data (or dict) to your handlers
-        get_chatbot(form, request)
+        get_chatbot(request)
         print("🚀 Starting chatbot...")
-        update_customer_if_exists(form, request)
+        update_customer_if_exists(request)
         print("✅ Customer updated in Supabase")
-        asyncio.create_task(start_chat(form, request))  # runs in background
+        asyncio.create_task(start_chat(request))  # runs in background
 
         return JSONResponse(content={"status": "ok"})
 

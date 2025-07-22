@@ -3,7 +3,8 @@ from app.models.whatsapptypes import WhatsAppWebhookData
 from supabase import Client
 
 
-def get_chatbot(form: any, request: Request):
+def get_chatbot(request: Request):
+    form = request.state.form
     supabase = request.state.supabase  # type: Client
     print("test")
     phone_number_id_str = form.get("WaId")

@@ -1,4 +1,3 @@
-import requests
 import os
 from dotenv import load_dotenv
 from twilio.rest import Client
@@ -10,8 +9,24 @@ WHATSAPP_TOKEN = os.getenv("ACCESS_TOKEN")
 PHONE_ID = os.getenv("PHONE_NUMBER_ID")
 
 
-def send_whatsapp_location(to):
-    pass
+from twilio.rest import Client
+
+
+def send_whatsapp_location(form, latitude, longitude, label="Our Shop"):
+    to = form.get("From")
+    from_ = form.get("To")
+    client = Client(settings.TWILIO_SID, settings.TWILIO_TOKEN)
+
+    # Send native WhatsApp location pin
+    print("Sending location pin...")
+    client.messages.create(
+        to=to,
+        from_=from_,
+        body=label,  # This will appear as the message text
+        persistent_action=[f"geo:{latitude},{longitude}|{label}"],
+        status_callback="https://example.com/callback",
+    )
+    print("Location pin sent successfully!")
 
 
 def send_whatsapp_message(form, message):
