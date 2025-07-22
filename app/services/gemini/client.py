@@ -5,7 +5,6 @@ from app.services.gemini.tools.tools_definitions.index import tools
 from app.services.whatsapp.whatsapp import send_whatsapp_message
 import json
 from pathlib import Path
-from app.models.whatsapptypes import WhatsAppWebhookData
 from google.genai import types
 from fastapi import Request
 
@@ -53,7 +52,7 @@ def save_chat_history(chat_history):
 
 
 # Main chat handler
-async def start_chat(whatsapp_data: WhatsAppWebhookData, request: Request):
+async def start_chat(form: any, request: Request):
     print("🔔 Incoming Whatsapp Data to StartChat")
 
     # Load previous history
@@ -66,7 +65,7 @@ async def start_chat(whatsapp_data: WhatsAppWebhookData, request: Request):
 
     chat = client.chats.create(model="gemini-2.5-flash", config=config, history=history)
 
-    final_response = await response_handler(chat, whatsapp_data, request)
+    final_response = await response_handler(chat, form, request)
 
     try:
         save_chat_history(chat.get_history())
@@ -74,7 +73,7 @@ async def start_chat(whatsapp_data: WhatsAppWebhookData, request: Request):
         print(f"⚠️ Failed to save chat history: {e}")
     if final_response:
         send_whatsapp_message(
-            whatsapp_data["entry"][0]["changes"][0]["value"]["messages"][0]["from"],
+            form,
             final_response,
         )
 

@@ -1,6 +1,3 @@
-python-dotenv
-aiohttp
-requests
 supabase
 fastapi
 google-auth
@@ -10,3 +7,4 @@ google-api-python-client
 google
 dateutil
 pydantic
+twilio

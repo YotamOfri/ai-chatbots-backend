@@ -3,13 +3,14 @@ from app.models.whatsapptypes import WhatsAppWebhookData
 from supabase import Client
 
 
-def get_chatbot(whatsappData: WhatsAppWebhookData, request: Request):
+def get_chatbot(form: any, request: Request):
     supabase = request.state.supabase  # type: Client
-    print(whatsappData["entry"][0]["changes"][0]["value"]["metadata"], "whatsappData")
-    phone_number_id_str = whatsappData["entry"][0]["changes"][0]["value"]["metadata"][
-        "phone_number_id"
-    ]
+    print("test")
+    phone_number_id_str = form.get("WaId")
     request.state.phone_number_id = phone_number_id_str
+    print(f"phone_number_id: {phone_number_id_str}")
+    if phone_number_id_str is None:
+        return
     try:
         phone_number_id = int(phone_number_id_str)
     except ValueError:

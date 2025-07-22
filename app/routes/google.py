@@ -20,7 +20,7 @@ async def exchange_code(request: Request):
     db = request.state.supabase
 
     scopes = creds.scopes if isinstance(creds.scopes, list) else [creds.scopes]
-
+    expiry = creds.expiry.isoformat() if creds.expiry else None
     result = (
         db.table("google_connections")
         .insert(
@@ -32,7 +32,8 @@ async def exchange_code(request: Request):
                 "token_uri": creds.token_uri,
                 "client_id": creds.client_id,
                 "client_secret": creds.client_secret,
-                "scopes": scopes,
+                "scopes": scopes,  # Assuming list or set
+                "expiry": expiry,
             }
         )
         .execute()

@@ -127,7 +127,7 @@ async def get_events_by_date(date, max_results=10, request: Request = None):
         end_of_day = (
             datetime.datetime.combine(date, datetime.time.max).isoformat() + "Z"
         )
-
+        print(f"Start of day: {start_of_day} End of day: {end_of_day}")
         events_result = (
             service.events()
             .list(
@@ -140,7 +140,9 @@ async def get_events_by_date(date, max_results=10, request: Request = None):
             )
             .execute()
         )
+        print(events_result)
         events = events_result.get("items", [])
+        print(events, "events")
         return events
     except HttpError as error:
         print(f"An error occurred while retrieving events: {error}")

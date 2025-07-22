@@ -1,26 +1,14 @@
 from app.services.gemini.utils.gemini_utils import send_message_with_retry
 from app.services.gemini.tools.function_executor import process_function_calls
 from fastapi import Request
+from app.utils.twillo import extract_message
 
 # from global_types.whatsapptypes import WhatsAppWebhookData
 
 
-async def response_handler(chat, message, request: Request):
-    if (
-        not message
-        or "entry" not in message
-        or "changes" not in message["entry"][0]
-        or "value" not in message["entry"][0]["changes"][0]
-        or "messages" not in message["entry"][0]["changes"][0]["value"]
-        or "text" not in message["entry"][0]["changes"][0]["value"]["messages"][0]
-        or "body"
-        not in message["entry"][0]["changes"][0]["value"]["messages"][0]["text"]
-    ):
-        print("❌ Invalid message format received:")
-        return None
-    parsed_message = message["entry"][0]["changes"][0]["value"]["messages"][0]["text"][
-        "body"
-    ]
+async def response_handler(chat, form, request: Request):
+
+    parsed_message = extract_message(form)
     print("🔔 Incoming WhatsApp Message:", parsed_message)
     response_text = None
     latest_response = await send_message_with_retry(

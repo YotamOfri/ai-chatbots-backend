@@ -3,15 +3,11 @@ from app.models.whatsapptypes import WhatsAppWebhookData
 from supabase import Client
 
 
-def update_customer_if_exists(whatsappData: WhatsAppWebhookData, request: Request):
+def update_customer_if_exists(form: any, request: Request):
     supabase = request.state.supabase  # type: Client
-    customer_phone_number = whatsappData["entry"][0]["changes"][0]["value"]["messages"][
-        0
-    ]["from"]
-    name = whatsappData["entry"][0]["changes"][0]["value"]["contacts"][0]["profile"][
-        "name"
-    ]
-    wa_id = whatsappData["entry"][0]["changes"][0]["value"]["contacts"][0]["wa_id"]
+    customer_phone_number = form.get("From")
+    name = form.get("ProfileName")
+    wa_id = form.get("WaId")
     customer = (
         supabase.table("customers")
         .select("*")

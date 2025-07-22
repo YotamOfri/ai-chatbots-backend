@@ -11,12 +11,13 @@ class Settings:
     GOOGLE_CLIENT_SECRET_FILE = "app/services/google_calendar/credentials.json"
     GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:5173")
     GOOGLE_SCOPES = [
-        "https://www.googleapis.com/auth/calendar",
-        "https://www.googleapis.com/auth/calendar.events",
-        "https://www.googleapis.com/auth/userinfo.profile",
-        "https://www.googleapis.com/auth/userinfo.email",
         "openid",
+        "https://www.googleapis.com/auth/calendar",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
     ]
+    TWILIO_SID = os.getenv("TWILIO_SID")
+    TWILIO_TOKEN = os.getenv("TWILIO_TOKEN")
 
 
 settings = Settings()

@@ -7,7 +7,7 @@ import datetime
 
 
 async def get_calendar_service(request: Request):
-    body = await request.json()
+
     # account_id = body["account_id"]
     account_id = "412d2267-a604-499c-909f-d54d67d2abe9"
 
