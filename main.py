@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from supabase import create_client, Client
 
 from app.core.config import settings
-from app.routes import webhook, google
+from app.routes import webhook, google, calendar, categories, services, bots
 
 
 @asynccontextmanager
@@ -41,6 +41,10 @@ app.add_middleware(
 # Register routes
 app.include_router(webhook.router, prefix="/webhook", tags=["Webhook"])
 app.include_router(google.router, prefix="/google", tags=["Google"])
+app.include_router(calendar.router, prefix="/calendar", tags=["Calendar"])
+app.include_router(categories.router, prefix="/categories", tags=["Categories"])
+app.include_router(services.router, prefix="/services", tags=["Services"])
+app.include_router(bots.router, prefix="/bots", tags=["Bots"])
 
 if __name__ == "__main__":
     import uvicorn

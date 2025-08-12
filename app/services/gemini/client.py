@@ -7,8 +7,6 @@ import json
 from pathlib import Path
 from google.genai import types
 from fastapi import Request
-from pydantic import BaseModel
-from enum import Enum
 
 CHAT_HISTORY_PATH = Path("chat_history.json")
 
@@ -73,7 +71,8 @@ async def start_chat(request: Request):
         print(f"⚠️ Failed to save chat history: {e}")
     if final_response:
         send_whatsapp_message(
-            form,
+            form.get("From"),
+            form.get("To"),
             final_response,
         )
 

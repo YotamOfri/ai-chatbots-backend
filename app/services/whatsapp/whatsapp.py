@@ -1,15 +1,36 @@
-import os
-from dotenv import load_dotenv
 from twilio.rest import Client
 from app.core.config import settings
-
-load_dotenv()
-
-WHATSAPP_TOKEN = os.getenv("ACCESS_TOKEN")
-PHONE_ID = os.getenv("PHONE_NUMBER_ID")
-
-
 from twilio.rest import Client
+
+
+def send_whatsapp_options(form, body_text, buttons):
+    """
+    Sends a WhatsApp interactive message with reply buttons.
+
+    :param form: incoming form with From/To
+    :param body_text: main message body
+    :param buttons: list of tuples (id, title)
+                    e.g. [("store_main", "🏬 Main Store"), ("store_outlet", "🛒 Outlet")]
+    """
+
+    to = form.get("From")
+    from_ = form.get("To")
+    client = Client(settings.TWILIO_SID, settings.TWILIO_TOKEN)
+
+    interactive_buttons = [
+        {"type": "reply", "reply": {"id": btn_id, "title": btn_title}}
+        for btn_id, btn_title in buttons
+    ]
+
+    try:
+        message = client.messages.create(
+            to=to,
+            from_=from_,
+            status_callback="https://example.com/callback",
+        )
+        print("Interactive message sent successfully!")
+    except Exception as e:
+        print(f"Error sending interactive message: {e}")
 
 
 def send_whatsapp_location(form, latitude, longitude, label="Our Shop"):
@@ -29,13 +50,13 @@ def send_whatsapp_location(form, latitude, longitude, label="Our Shop"):
     print("Location pin sent successfully!")
 
 
-def send_whatsapp_message(form, message):
-    message_to = form.get("From")
-    message_from = form.get("To")
+def send_whatsapp_message(to_, from_, message):
+    # message_to = form.get("From")
+    # message_from = form.get("To")
     client = Client(settings.TWILIO_SID, settings.TWILIO_TOKEN)
     message = client.messages.create(
-        to=message_to,
-        from_=message_from,
+        to=to_,
+        from_=from_,
         body=message,
         status_callback="https://example.com/callback",
     )

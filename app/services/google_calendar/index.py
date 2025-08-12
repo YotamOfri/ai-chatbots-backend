@@ -11,7 +11,6 @@ async def get_calendar_service(request: Request):
     # account_id = body["account_id"]
     account_id = "412d2267-a604-499c-909f-d54d67d2abe9"
 
-    # Fetch credentials data from Supabase (sync call, no await)
     response = (
         request.app.state.supabase.table("google_connections")
         .select("*")
@@ -31,15 +30,16 @@ async def get_calendar_service(request: Request):
         client_secret=creds_data["client_secret"],
         scopes=creds_data["scopes"],
     )
-    # Refresh the token if expired or close to expire
+    print(creds.valid, "creds")
     if not creds.valid or (
         creds.expiry
         and creds.expiry < datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
     ):
+
         try:
             request_adapter = GoogleRequest()
             creds.refresh(request_adapter)
-
+            print("Credentials refreshed successfully")
             # Update the refreshed tokens in Supabase
             update_response = (
                 request.app.state.supabase.table("google_connections")

@@ -7,17 +7,14 @@ router = APIRouter()
 
 @router.post("/token")
 async def exchange_code(request: Request):
+    db = request.state.supabase
     data = await request.json()
     code = data["code"]
-    account_id = data["account_id"]  # Make sure this is sent from frontend
-
+    account_id = data["account_id"]
+    chatbot_id = data["chatbot_id"]
     results = get_credentials_from_code(code)
-
     creds = results["credentials"]
     user_info = results["user_info"]
-    print(creds.to_json(), "creds")
-    print(user_info, "user_info")
-    db = request.state.supabase
 
     scopes = creds.scopes if isinstance(creds.scopes, list) else [creds.scopes]
     expiry = creds.expiry.isoformat() if creds.expiry else None
@@ -34,6 +31,7 @@ async def exchange_code(request: Request):
                 "client_secret": creds.client_secret,
                 "scopes": scopes,  # Assuming list or set
                 "expiry": expiry,
+                "chatbot_id": chatbot_id,
             }
         )
         .execute()
@@ -41,4 +39,15 @@ async def exchange_code(request: Request):
     return {
         "message": "Google credentials saved",
         "account_id": account_id,
+        "result": result,
     }
+
+
+@router.delete("/token/{chatbot_id}")
+async def delete_token(request: Request):
+    chatbot_id = request.path_params["chatbot_id"]
+    db = request.state.supabase
+    result = (
+        db.table("google_connections").delete().eq("chatbot_id", chatbot_id).execute()
+    )
+    return {"message": "Google credentials deleted", "result": result}

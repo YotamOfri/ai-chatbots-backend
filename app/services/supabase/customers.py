@@ -1,5 +1,4 @@
 from fastapi import Request
-from app.models.whatsapptypes import WhatsAppWebhookData
 from supabase import Client
 
 

@@ -1,19 +1,16 @@
 from fastapi import Request
-from app.models.whatsapptypes import WhatsAppWebhookData
 from supabase import Client
 
 
 def get_chatbot(request: Request):
     form = request.state.form
     supabase = request.state.supabase  # type: Client
-    print("test")
-    phone_number_id_str = form.get("WaId")
+    phone_number_id_str = form.get("To")
     request.state.phone_number_id = phone_number_id_str
-    print(f"phone_number_id: {phone_number_id_str}")
     if phone_number_id_str is None:
         return
     try:
-        phone_number_id = int(phone_number_id_str)
+        phone_number_id = 14155238886
     except ValueError:
         print(f"Invalid phone_number_id: {phone_number_id_str}")
         return None

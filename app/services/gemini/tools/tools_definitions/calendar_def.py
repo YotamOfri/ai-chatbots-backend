@@ -4,11 +4,12 @@ from app.services.gemini.tools.tool_functions.calendar_functions import (
     update_calendar_event,
     delete_calendar_event,
     get_events_by_date,
+    find_available_slot,
 )
 
 calendar_functions = {
     "create_event": {
-        "description": "Creates a new calendar event. Before using this tool, check for existing events at the requested time using the get_events_by_date tool.",
+        "description": "Creates a new calendar event. Before using this tool, check for existing events at the requested time using the 'check_availability' tool.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -35,20 +36,20 @@ calendar_functions = {
         },
         "fetcher": create_calendar_event,
     },
-    "get_upcoming_events": {
-        "description": "Retrieves a list of upcoming events from the user's calendar.",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "max_results": {
-                    "type": "integer",
-                    "description": "Maximum number of upcoming events to retrieve",
-                    "default": 10,
-                },
-            },
-        },
-        "fetcher": get_upcoming_events,
-    },
+    # "get_upcoming_events": {
+    #     "description": "Retrieves a list of upcoming events from the user's calendar.",
+    #     "parameters": {
+    #         "type": "object",
+    #         "properties": {
+    #             "max_results": {
+    #                 "type": "integer",
+    #                 "description": "Maximum number of upcoming events to retrieve",
+    #                 "default": 10,
+    #             },
+    #         },
+    #     },
+    #     "fetcher": get_upcoming_events,
+    # },
     "get_events_by_date": {
         "description": "Retrieves a list of upcoming events from the user's calendar.",
         "parameters": {
@@ -116,5 +117,24 @@ calendar_functions = {
             "required": ["event_id"],
         },
         "fetcher": delete_calendar_event,
+    },
+    "check_availability": {
+        "description": "Checks if a specific date is available for a calendar event.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "desired_datetime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date in ISO 8601 format (e.g., 2025-07-10)",
+                },
+                "duration_minutes": {
+                    "type": "integer",
+                    "description": "Duration of the event in minutes according to type of service",
+                },
+            },
+            "required": ["desired_datetime", "duration_minutes"],
+        },
+        "fetcher": find_available_slot,
     },
 }

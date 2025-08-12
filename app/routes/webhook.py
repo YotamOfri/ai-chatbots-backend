@@ -40,9 +40,9 @@ async def receive_message(request: Request):
         print("🚀 Starting chatbot...")
         update_customer_if_exists(request)
         print("✅ Customer updated in Supabase")
-        asyncio.create_task(start_chat(request))  # runs in background
+        response = await asyncio.create_task(start_chat(request))  # runs in background
 
-        return JSONResponse(content={"status": "ok"})
+        return JSONResponse(content={"status": "success", "detail": response})
 
     except Exception as e:
         print("❌ Error handling webhook:", str(e))
