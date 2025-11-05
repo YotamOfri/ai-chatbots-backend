@@ -46,6 +46,12 @@ app.include_router(categories.router, prefix="/categories", tags=["Categories"])
 app.include_router(services.router, prefix="/services", tags=["Services"])
 app.include_router(bots.router, prefix="/bots", tags=["Bots"])
 
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+
 if __name__ == "__main__":
     import uvicorn
 
