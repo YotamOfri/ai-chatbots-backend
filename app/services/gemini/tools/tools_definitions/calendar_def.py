@@ -36,20 +36,6 @@ calendar_functions = {
         },
         "fetcher": create_calendar_event,
     },
-    # "get_upcoming_events": {
-    #     "description": "Retrieves a list of upcoming events from the user's calendar.",
-    #     "parameters": {
-    #         "type": "object",
-    #         "properties": {
-    #             "max_results": {
-    #                 "type": "integer",
-    #                 "description": "Maximum number of upcoming events to retrieve",
-    #                 "default": 10,
-    #             },
-    #         },
-    #     },
-    #     "fetcher": get_upcoming_events,
-    # },
     "get_events_by_date": {
         "description": "Retrieves a list of upcoming events from the user's calendar.",
         "parameters": {
